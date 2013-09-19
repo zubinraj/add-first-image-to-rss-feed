@@ -61,6 +61,8 @@ function add_first_image() {
 
 			$output .= '<thumbnail>';
 			$output .= '<url>'. $image_attributes[0] .'</url>';
+			$output .= '<width>'. $image_attributes[1] .'</width>';
+			$output .= '<height>'. $image_attributes[2] .'</height>';
 			$output .= '</thumbnail>';
 
 		}
