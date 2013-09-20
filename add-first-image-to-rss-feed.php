@@ -8,34 +8,6 @@ Version: 1.0
 Author URI: http://www.zubinraj.com
 */
 
-/*	function echo_first_image( $content ) {
-		global $post;
-		$args = array(
-			'numberposts' => 1,
-			'order' => 'ASC',
-			'post_mime_type' => 'image',
-			'post_parent' => $post->ID,
-			'post_status' => null,
-			'post_type' => 'attachment',
-		);
-
-		$attachments = get_children( $args );
-
-		if ( $attachments ) {
-			foreach ( $attachments as $attachment ) {
-				$image_attributes = wp_get_attachment_image_src( $attachment->ID, 'medium' )  ? wp_get_attachment_image_src( $attachment->ID, 'medium' ) : wp_get_attachment_image_src( $attachment->ID, 'full' );
-
-				$content = '<div class="zr-first-image-thumb"><img src="' . $image_attributes[0] . '"/></div>' . $content;
-			}
-		}
-		
-		return $content;
-
-	}	
-	add_filter('the_excerpt_rss', 'echo_first_image', 1000, 1);
-	add_filter('the_content_feed', 'echo_first_image', 1000, 1);
-*/
-
 add_action( 'rss2_item', 'add_first_image' );
 
 function add_first_image() {
@@ -57,13 +29,17 @@ function add_first_image() {
 	
 	if ( $attachments ) {
 		foreach ( $attachments as $attachment ) {
-			$image_attributes = wp_get_attachment_image_src( $attachment->ID, 'medium' )  ? wp_get_attachment_image_src( $attachment->ID, 'medium' ) : wp_get_attachment_image_src( $attachment->ID, 'full' );
+			$thumb_attributes = wp_get_attachment_image_src( $attachment->ID, 'medium' )  ? wp_get_attachment_image_src( $attachment->ID, 'medium' ) : wp_get_attachment_image_src( $attachment->ID, 'full' );
+			$original_attributes = wp_get_attachment_image_src( $attachment->ID, 'full' );
 
-			$output .= '<thumbnail>';
-			$output .= '<url>'. $image_attributes[0] .'</url>';
-			$output .= '<width>'. $image_attributes[1] .'</width>';
-			$output .= '<height>'. $image_attributes[2] .'</height>';
-			$output .= '</thumbnail>';
+			$output .= '<image>';
+			$output .= '<thumb width="' . $thumb_attributes[1] . '" height="' . $thumb_attributes[2] . '">' ;
+			$output .= $thumb_attributes[0];
+			$output .= '</thumb>';
+			$output .= '<original width="' . $original_attributes[1] . '" height="' . $original_attributes[2] . '">' ;
+			$output .= $original_attributes[0];
+			$output .= '</original>';
+			$output .= '</image>';
 
 		}
 	}
